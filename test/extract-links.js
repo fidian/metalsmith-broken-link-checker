@@ -1,65 +1,63 @@
-const {expect} = require("chai")
-const extractLinks = require("../src/extract-links")
+const extractLinks = require("../src/extract-links");
+const assert = require("assert");
 
 describe("extractLinks", () => {
-  let links
-  before(() => {
-    links = extractLinks(`
+    let links;
+
+    before(() => {
+        links = extractLinks(`
       <a href="/my-href/">Link text</a>
       <a name="link-to-me">Anchor text</a>
       <img src="/my-src/" alt="Alt text">
-    `)
-  })
+    `);
+    });
 
-  it("should extract three links from the given html", () => {
-    expect(links).to.have.length(3)
-  })
+    it("should extract three links from the given html", () => {
+        assert.ok(links.length === 3);
+    });
 
-  describe("'a' tags (not anchors)", () => {
-    it("should extract the target", () => {
-      expect(links[0]).to.have.property("target", "/my-href/")
-    })
+    describe("'a' tags (not anchors)", () => {
+        it("should extract the target", () => {
+            assert.ok(links[0].target === "/my-href/");
+        });
 
-    it("should extract the type", () => {
-      expect(links[0]).to.have.property("type", "link")
-    })
+        it("should extract the type", () => {
+            assert.ok(links[0].type === "link");
+        });
 
-    it("should extract a description", () => {
-      expect(links[0]).to.have.property("description")
-      expect(links[0].description).to.contain("/my-href/")
-      expect(links[0].description).to.contain("Link text")
-    })
-  })
+        it("should extract a description", () => {
+            assert.ok(links[0].description.includes("/my-href/"));
+            assert.ok(links[0].description.includes("Link text"));
+        });
+    });
 
-  describe("anchor tags ('a' with a name/id attribute)", () => {
-    it("should not extract a target", () => {
-      expect(links[1]).to.not.have.property("target")
-    })
+    describe("anchor tags ('a' with a name/id attribute)", () => {
+        it("should not extract a target", () => {
+            assert.ok(!links[1].target);
+        });
 
-    it("should extract the type", () => {
-      expect(links[1]).to.have.property("type", "anchor")
-    })
+        it("should extract the type", () => {
+            assert.ok(links[1].type === "anchor");
+        });
 
-    it("should extract a description", () => {
-      expect(links[1]).to.have.property("description")
-      expect(links[1].description).to.contain("link-to-me")
-      expect(links[1].description).to.contain("Anchor text")
-    })
-  })
+        it("should extract a description", () => {
+            assert.ok(links[1].description.includes("link-to-me"));
+            assert.ok(links[1].description.includes("Anchor text"));
+        });
+    });
 
-  describe("'img' tags", () => {
-    it("should extract the target", () => {
-      expect(links[2]).to.have.property("target", "/my-src/")
-    })
+    describe("'img' tags", () => {
+        it("should extract the target", () => {
+            assert.ok(links[2].target === "/my-src/");
+        });
 
-    it("should extract the type", () => {
-      expect(links[2]).to.have.property("type", "image")
-    })
+        it("should extract the type", () => {
+            assert.ok(links[2].type === "image");
+        });
 
-    it("should extract a description", () => {
-      expect(links[2]).to.have.property("description")
-      expect(links[2].description).to.contain("/my-src/")
-      expect(links[2].description).to.contain("Alt text")
-    })
-  })
-})
+        it("should extract a description", () => {
+            assert.ok(links[2].description.includes("/my-src/"));
+            assert.ok(links[2].description.includes("Alt text"));
+        });
+    });
+});

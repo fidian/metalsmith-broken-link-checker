@@ -1,20 +1,21 @@
-const {expect} = require("chai")
-const extractAnchorTargets = require("../src/extract-anchor-targets")
+const extractAnchorTargets = require("../src/extract-anchor-targets");
+const assert = require("assert");
 
 describe("extractAnchorTargets", () => {
-  let targets
-  before(() => {
-    targets = extractAnchorTargets(`
+    let targets;
+
+    before(() => {
+        targets = extractAnchorTargets(`
       <a name="target1"></a>
       <div id="target2"></div>
-    `)
-  })
+    `);
+    });
 
-  it("should extract a 'name' attribute", () => {
-    expect(targets[0]).to.equals("target1")
-  })
+    it("should extract a 'name' attribute", () => {
+        assert.ok(targets[0] === 'target1');
+    });
 
-  it("should extract an 'id' attribute", () => {
-    expect(targets[1]).to.equals("target2")
-  })
-})
+    it("should extract an 'id' attribute", () => {
+        assert.ok(targets[1] === 'target2');
+    });
+});
